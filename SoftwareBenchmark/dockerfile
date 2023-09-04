@@ -1,0 +1,29 @@
+# Wir beginnen mit einer Standard-Python-3-Image.
+FROM python:3.9-slim
+
+# Setzen Sie das Arbeitsverzeichnis im Container
+WORKDIR /app
+
+# Installieren Sie die grundlegenden Abhängigkeiten.
+RUN apt-get update && apt-get install -y \
+    gcc \
+    libgmp-dev \
+    libmpfr-dev \
+    libmpc-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Kopieren Sie die Dateien in das Arbeitsverzeichnis
+COPY . /app
+
+# Installieren Sie die Python-Bibliotheken.
+#RUN pip install --no-cache-dir numpy scipy sklearn pandas gmpy2 tqdm sympy joblib
+
+
+RUN pip3 install -r requirements.txt
+
+# Setzen Sie die Umgebungsvariable für den Python-Ausgabepuffer.
+ENV PYTHONUNBUFFERED=1
+
+# Führen Sie das Python-Skript aus.
+CMD ["python", "./main.py"]
